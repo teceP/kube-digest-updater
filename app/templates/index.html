@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+    <title>Echtzeit-Liste</title>
+</head>
+<body>
+<div class="container">
+    <h1>Echtzeit-Liste von FoundRes-Objekten</h1>
+    <ul id="resourceList" class="list-group">
+        <!-- Listenelemente werden hier eingefügt -->
+    </ul>
+    <button id="addItemBtn" class="btn btn-primary mt-3">Neues Element hinzufügen</button>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+<script>
+    function fetchList() {
+      $.ajax({
+        url: '/list',
+        method: 'GET',
+        success: function(data) {
+          $('#resourceList').empty();
+          data.forEach(function(item) {
+            $('#resourceList').append(`
+              <li class="list-group-item">
+                <strong>Name:</strong> ${item.name}<br>
+                <strong>Namespace:</strong> ${item.namespace}<br>
+                <strong>Image:</strong> ${item.image}<br>
+                <strong>Time Added:</strong> ${item.time_added}<br>
+                <strong>Latest Checked:</strong> ${item.latest_checked}<br>
+                <strong>Current Digest:</strong> ${item.current_digest}
+              </li>
+            `);
+          });
+        }
+      });
+    }
+
+    $(document).ready(function() {
+      // Initiale Liste laden
+      fetchList();
+
+      // Neues Element hinzufügen
+      $('#addItemBtn').click(function() {
+        $.ajax({
+          url: '/add_item',
+          method: 'GET',
+          success: function(response) {
+            fetchList();
+          }
+        });
+      });
+
+      // Liste alle 5 Sekunden aktualisieren
+      setInterval(fetchList, 5000);
+    });
+</script>
+</body>
+</html>

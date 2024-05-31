@@ -1,0 +1,7 @@
+#Flask
+flask[async]
+flask-bootstrap
+kubernetes
+Flask-APScheduler
+harborapi
+nest_asyncio
